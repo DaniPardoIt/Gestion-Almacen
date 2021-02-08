@@ -1,0 +1,435 @@
+
+:root{
+    --c1: rgb(83, 165, 212);
+    --c1T: rgba(34, 129, 64, .5);
+    --c1L: rgb(107, 212, 141);
+    --c1LT: rgba(107, 212, 141, .5);
+    --c1VL: rgb(183, 241, 202);
+    --c1O: rgb(20, 97, 45);
+    --c1VO: rgb(9, 66, 27);
+
+
+    --c2: rgb(225, 101, 99);
+    --c2T: rgba(225, 101, 99, .5);
+    --c2L: rgb(218, 153, 152);
+    --c2VL: rgb(219, 189, 188);
+    --c2O: rgb(156, 68, 65);
+    --c2VO: rgb(88, 40, 39);
+
+
+    --cBg: rgb(40, 44, 46);
+    --cBgT: rgba(24, 35, 43, .8);
+    --cBgL: rgb(29, 43, 53);
+
+
+    --cError: rgb(204, 62, 62);
+    --cErrorT: rgba(116, 34, 34, 0.9);
+    --cErrorL: rgb(254, 112, 112);
+    --cErrorO: rgb(82, 1, 19);
+
+
+    --cWarning: rgb(190, 168, 39);
+    --cWarningT: rgba(190, 168, 39,.5);
+
+
+    --cSucceedT: rgba(21, 100, 45, 0.9);
+    --cSucceed: rgb(58, 172, 92);
+}
+
+/***********************************************
+*********        NORMALIZAR CSS        *********
+***********************************************/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    font-family: sans-serif;
+}
+
+body, html{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    min-height: 100vh;
+    position: relative;
+    color: white;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+a{
+    text-decoration: none !important;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+button{
+    border: none;
+}
+
+.hidden{
+    display: none;
+    opacity: 0;
+}
+
+
+/***********************************************
+*************        MY CSS        *************
+***********************************************/
+
+/*! ***********    BACKGROUND    *************/
+
+.bg-transp{
+    background-color: transparent;
+}
+
+
+.bg-c1{
+    background-color: var(--c1);
+}
+.bg-c1L{
+    background-color: var(--c1L);
+}
+.bg-c1O{
+    background-color: var(--c1O);
+}
+
+
+.bg-c2{
+    background-color: var(--c2);
+}
+.bg-c2L{
+    background-color: var(--c2L);
+}
+.bg-c2O{
+    background-color: var(--c2O);
+}
+
+
+.bg-cBg{
+    background-color: var(--cBg);
+}
+.bg-cBgL{
+    background-color: var(--cBgL);
+}
+
+
+.bg-succeed{
+    background-color: var(--cSucceed);
+}
+.bg-succeedT{
+    background-color: var(--cSucceedT);
+}
+.bg-warning{
+    background-color: var(--cWarning);
+}
+.bg-warningT{
+    background-color: var(--cWarningT);
+}
+.bg-error{
+    background-color: var(--cError);
+}
+.bg-errorT{
+    background-color: var(--cErrorT);
+}
+.bg-errorL{
+    background-color: var(--cErrorL);
+}
+.bg-errorO{
+    background-color: var(--cErrorO);
+}
+
+
+/*! ***********    COLOR    *************/
+
+.c-transp{
+    color: transparent;
+}
+
+
+.C-c1{
+    color: var(--c1);
+}
+.C-c1L{
+    color: var(--c1L);
+}
+.C-c1O{
+    color: var(--c1O);
+}
+
+
+.C-c2{
+    color: var(--c2);
+}
+.C-c2L{
+    color: var(--c2L);
+}
+.C-c2O{
+    color: var(--c2O);
+}
+
+
+.C-cBg{
+    color: var(--cBg);
+}
+.C-cBgL{
+    color: var(--cBgL);
+}
+
+
+.C-succeed{
+    color: var(--cSucceed);
+}
+.C-succeedT{
+    color: var(--cSucceedT);
+}
+.C-warning{
+    color: var(--cWarning);
+}
+.C-warningT{
+    color: var(--cWarningT);
+}
+.C-error{
+    color: var(--cError);
+}
+.C-errorT{
+    color: var(--cErrorT);
+}
+.C-errorL{
+    color: var(--cErrorL);
+}
+.C-errorO{
+    color: var(--cErrorO);
+}
+
+
+
+/*! ***********    BUTTON    *************/
+
+.btn{
+    transition: .3s ease-in-out;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 10px 15px;
+}
+.btn:hover{
+    transition: .3s ease-in-out;
+    box-shadow: 0 0 20px 5px rgba(0,0,0,.2);
+}
+.btn:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+
+.btn-c1{
+    background-color: var(--c1);
+    border: 2px solid var(--c1);
+    color: white;
+}
+.btn-c1:hover{
+    background-color: var(--c1O);
+    border-color: var(--c1O);
+    color:white;
+}
+.btn-outline-c1{
+    background-color: transparent;
+    border: 2px solid var(--c1);
+    color: var(--c1);
+    font-weight: 500;
+}
+.btn-outline-c1:hover{
+    background-color: var(--c1);
+    color: white;
+}
+
+.btn-c1L{
+    background-color: var(--c1L);
+    border: 2px solid var(--c1L);
+    color: var(--cBg);
+}
+.btn-c1L:hover{
+    background-color: var(--cBg);
+    border-color: var(--c1L);
+    color: var(--c1L);
+}
+.btn-outline-c1L{
+    background-color: transparent;
+    border: 2px solid var(--c1L);
+    color: var(--c1L);
+}
+.btn-outline-c1L:hover{
+    background-color: var(--c1L);
+    color: var(--cBg);
+}
+
+
+.btn-c2{
+    background-color: var(--c2);   
+    border: 2px solid var(--c2);
+    color: white;
+}
+.btn-c2:hover{
+    background-color: var(--c2O);
+    border-color: var(--c2O);
+    color:white;
+}
+.btn-outline-c2{
+    background-color: transparent;
+    border: 2px solid var(--c2);
+    color: var(--c2);
+}
+.btn-outline-c2:hover{
+    background-color: var(--c2);
+    color: white;
+}
+
+
+
+/*! **********     FORM     *********** */
+
+.form-c1{
+    border: 5px solid var(--c1L);
+    border-radius: 15px;
+    padding: 50px 70px;
+    background-color: var(--cBg);
+}
+
+.form-c1 h2{
+    color: var(--c1L);
+    margin-bottom: 20px;
+}
+
+.form-c1 label, label-c1{
+    font-size: 1.3em;
+    color: var(--c1L);
+}
+
+.form-c1 input, input-c1{
+    transition: .2s ease-in-out;
+    border: 3px solid var(--c1L);
+    border-radius: 10px;
+    background-color: var(--c1L);
+    color: var(--cBg);
+    font-size: 1.3em;
+    padding-left: 10px;
+}
+
+.form-c1 input:focus, input-c1:focus{
+    transition: .2s ease-in-out;
+    background-color: var(--cBg);
+    color: var(--c1L);
+    font-size: 1.3em;
+    box-shadow: 0 0 15px 3px rgba(0,0,0,.2);
+}
+
+.form-c1 .inputError, .inputError{
+    border-color: var(--cError);
+    background-color: var(--cErrorT);
+}
+
+::-webkit-calendar-picker-indicator{
+    filter: invert(1);
+}
+
+
+/*! ***********    MODAL    *************/
+
+.modalContainer{
+    z-index: 9999;
+    padding: 15px 20px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    max-width: 40%;
+}
+
+.modalContainer button{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    top:10px;
+    right: 10px;
+}
+
+.modalContainer h3{
+    margin-right: 70px;
+}
+
+.modalContainer p{
+    margin-bottom: 3px;
+    font-size: 1.1em;
+}
+
+.modal-c1{
+    background-color: var(--cBgT);
+    border: 3px solid var(--c1L);
+    border-radius: 10px;
+    color: var(--c1L);
+}
+
+
+.modal-error{
+    background-color: var(--cErrorT);
+    border: 3px solid white;
+    border-radius: 10px;
+    color: white;
+}
+.modal-error button{
+    border-color: white !important;
+    color: white !important;
+}
+.modal-error button:hover{
+    border-color: white !important;
+    background-color: white;
+    color: var(--cErrorT) !important;
+}
+
+
+.modal-succeed{
+    background-color: var(--cSucceedT);
+    border: 3px solid white;
+    border-radius: 10px;
+    color: white;
+}
+.modal-succeed button{
+    border-color: white !important;
+    color: white !important;
+}
+.modal-succeed button:hover{
+    border-color: white !important;
+    background-color: white;
+    color: var(--cSucceedT) !important;
+}
+
+
+/*! ***********    EXTRA    *************/
+
+.border-0{
+    border: none;
+}
+.bRadius-0{
+    border-radius: 0;
+}
+.bRadius-5{
+    border-radius: 5px;
+}
+.bRadius-10{
+    border-radius: 10px;
+}
+.bRadius-15{
+    border-radius: 15px;
+}
+.bRadius-50{
+    border-radius: 50%;
+}
