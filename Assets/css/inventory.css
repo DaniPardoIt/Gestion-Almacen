@@ -45,6 +45,34 @@ select:-webkit-autofill:focus {
   border: 2px solid var(--c1);
 
   padding: 30px 50px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#loginForm .logoContainer h2{
+  text-transform: uppercase;
+  color: var(--c1);
+  font-size: 1.5em;
+  margin-left: 15px;
+  transform: translateY(4px);
+  font-weight: bolder;
+}
+
+#loginForm .logoContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+#loginForm .formGroup{
+  margin-bottom: 30px;
+}
+
+.formGroup label{
+  font-size: 1.2em;
 }
 .form-control{
   background-color: rgba(0,0,0,.1);
@@ -57,4 +85,21 @@ select:-webkit-autofill:focus {
   border-color: var(--c1);
   background-color: rgba(0,0,0,.4);
   color: white;
+}
+
+.passwordContainer{
+  display: flex;
+  position: relative;
+}
+#eye-visibility{
+  justify-self: flex-end;
+  position: absolute;
+  right: 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.loginFormContainer .btn {
+  align-self: center;
 }

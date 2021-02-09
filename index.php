@@ -1,7 +1,7 @@
 
 <?php
 
-header("Location: Vista/login.php");
+header("Location: Vista/vLogin.php");
 exit();
 
 ?>
