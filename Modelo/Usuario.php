@@ -1,6 +1,6 @@
 <?php
 
-class User {
+class Usuario {
   private $id;
   private $nombre;
   private $email;
@@ -11,36 +11,50 @@ class User {
     $this->setNombre($nombre);
     $this->setEmail($email);
   }
-}
+  
+  public function getObject(){
+    $obj = new stdClass;
+    $obj->id = $this->getId();
+    $obj->id = $this->getNombre();
+    $obj->id =  $this->getEmail();
 
-function setId($id){
-  $this->id = $id;
-}
+    return $obj;
+  }
 
-function getId(){
-  return $this->id;
-}
+  public function __toString()
+  {
+    return "Nombre: ".$this->getNombre()."Email: ".$this->getEmail()."Id: ".$this->getId();
+  }
 
-function setNombre($nombre){
-  $this->nombre = $nombre;
-}
+  function setId($id){
+    $this->id = $id;
+  }
+  
+  function getId(){
+    return $this->id;
+  }
+  
+  function setNombre($nombre){
+    $this->nombre = $nombre;
+  }
+  
+  function getNombre(){
+    return $this->nombre;
+  }
+  
+  function setEmail($email){
+    $this->email = $email;
+  }
+  
+  function getEmail(){
+    return $this->email;
+  }
+  
+  function setPassword($password){
+    $this->password = $password;
+  }
 
-function getNombre(){
-  return $this->nombre;
-}
-
-function setEmail($email){
-  $this->email = $email;
-}
-
-function getEmail(){
-  return $this->email;
-}
-
-function setPassword($password){
-  $this->password = $password;
-}
-
-function getPassword(){
-  return $this->password;
+  function getPassword(){
+    return $this->password;
+  }
 }

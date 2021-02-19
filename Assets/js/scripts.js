@@ -18,6 +18,7 @@ function checkLogin(){
   let email = document.getElementById('email').value
   let password = document.getElementById('password').value
 
+
   fetch(`../Controlador/cLogin.php?email=${email}&password=${password}`)
     .then(response => {
       console.log(response)
@@ -25,6 +26,9 @@ function checkLogin(){
     })
     .then(data => {
       console.log(data)
+      if(data==true){
+        window.location.href = "../Controlador/cHome.php"
+      }
     })
 }
 
@@ -85,5 +89,72 @@ function buildSucceedModal(title, msg){
   modal.classList.add('modal-succeed')
 }
 
+function verEstanteria(divHueco){
+  let numHueco = divHueco.id;
+  let idPasillo = divHueco.parentElement.parentElement.id
+
+  window.location.href = `../Controlador/cVerEstanteria.php?idPasillo=${idPasillo}&hueco=${numHueco}`;
+  return;
+}
+
+function crearEstanteria(divHueco){
+  let numHueco = divHueco.id;
+  let idPasillo = divHueco.parentElement.parentElement.id
+
+  window.location.href = `../Vista/vCrearEstanteria.php?idPasillo=${idPasillo}&hueco=${numHueco}`;
+  return;
+}
+
+function irAHome(){
+  window.location.href = "../Controlador/cHome.php";
+}
+
+function showErrorMsg(element, msg){
+  element.classList.add('error')
+  let pError = element.getElementsByClassName('errorMsg')[0];
+  removeChilds(pError);
+  pError.appendChild(document.createTextNode(msg))
+}
+
+function cambiaCodigoEstanteria(inputCodigo){
+  inputCodigo.parentElement.classList.remove('error')
+  let codigo = inputCodigo.value;
+  if(codigo.substring(0,2) != "ES"){
+    showErrorMsg(inputCodigo.parentElement, "El código de estantería debe empezar por ES");
+    return false;
+  }
+  if(codigo.length != 5){
+    showErrorMsg(inputCodigo.parentElement, "Ejemplo de código: ES001");
+    return false;
+  }
+  for(let i=2; i<5; i++){
+    if(isNaN(codigo.substring(i, i+1))){
+      showErrorMsg(inputCodigo.parentElement, "Los últimos 3 caracteres deben ser números. Ej: ES001")
+      return false;
+    }
+  }
+
+  let obj = {
+    metodo: "checkCodigoEstanteria",
+    cod: codigo
+  }
+  obj = JSON.stringify(obj)
+  fetch(`../Controlador/cAsync.php?obj=${obj}`)
+  .then( response => {
+    return response.json()
+  })
+  .then( res => {
+    if(!res){
+      console.log(res)
+      showErrorMsg(inputCodigo.parentElement, "Este código ya está en uso")
+      return false;
+    }
+  })
+}
+
+
+function cambiaLejaEstanteria(inputLejas){
+
+}
 
 

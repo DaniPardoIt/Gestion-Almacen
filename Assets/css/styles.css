@@ -18,8 +18,8 @@
 
 
     --cBg: rgb(40, 44, 46);
-    --cBgT: rgba(24, 35, 43, .8);
-    --cBgL: rgb(29, 43, 53);
+    --cBgT: rgba(40, 44, 46, .8);
+    --cBgL: rgb(48, 52, 55);
 
 
     --cError: rgb(204, 62, 62);
@@ -290,6 +290,26 @@ button{
 }
 .btn-outline-c2:hover{
     background-color: var(--c2);
+    color: white;
+}
+
+.btn-cError{
+    background-color: var(--cError);   
+    border: 2px solid var(--cError);
+    color: white;
+}
+.btn-cError:hover{
+    background-color: var(--cErrorO);
+    border-color: var(--cErrorO);
+    color:white;
+}
+.btn-outline-cError{
+    background-color: transparent;
+    border: 2px solid var(--cError);
+    color: var(--cError);
+}
+.btn-outline-cError:hover{
+    background-color: var(--cError);
     color: white;
 }
 

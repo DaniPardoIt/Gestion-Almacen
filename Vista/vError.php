@@ -1,8 +1,20 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+$error = $_REQUEST['Error'];
 
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <?php include_once 'Estaticos/meta.php'; ?>
+  <title>Inventory | Error</title>
+</head>
+<body>
+  <?php include_once 'Estaticos/header.php'; ?>
+  <main>
+
+  </main>
+  <?php include_once 'Estaticos/scripts.php' ?>
+</body>
+</html>

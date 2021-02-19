@@ -4,12 +4,12 @@
 }
 body{
   background-color: var(--cBg);
-  width: 100vw !important;
+  width: 100% !important;
 }
 
 main{
-  width: 100vw !important;
-  min-height: 100vh;
+  width: 100% !important;
+  min-height: 80vh;
 }
 *{
   outline: none !important;
@@ -27,6 +27,37 @@ select:-webkit-autofill:focus {
   -webkit-text-fill-color: white;
   -webkit-box-shadow: 0 0 0px 1000px transparent inset;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.hidden{
+  display: hidden;
+}
+
+
+
+/* ! HEADER */
+
+header{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 40px;
+  background-color: var(--cBgL);
+  width: 100%;
+}
+
+.logoContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}  
+
+.logoContainer h2{
+  text-transform: uppercase;
+  color: var(--c1);
+  font-size: 1.5em;
+  margin-left: 15px;
+  transform: translateY(4px);
+  font-weight: bolder;
 }
 /* ! LOGIN ! */
 
@@ -50,22 +81,6 @@ select:-webkit-autofill:focus {
   flex-direction: column;
 }
 
-#loginForm .logoContainer h2{
-  text-transform: uppercase;
-  color: var(--c1);
-  font-size: 1.5em;
-  margin-left: 15px;
-  transform: translateY(4px);
-  font-weight: bolder;
-}
-
-#loginForm .logoContainer{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 30px;
-}
 
 #loginForm .formGroup{
   margin-bottom: 30px;
@@ -102,4 +117,233 @@ select:-webkit-autofill:focus {
 
 .loginFormContainer .btn {
   align-self: center;
+}
+
+/* ! HEADER */
+
+header .logoContainer{
+  
+}
+
+
+/* ! HOME */
+#pasillosContainer{
+  height: 75%;
+  padding: 30px
+}
+
+#pasillosContainer{
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.pasillos {
+  height: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 60px;
+  justify-content: center;
+}
+
+.pasillos .pasillo{
+  display: grid;
+  grid-template-columns: 3fr 2fr 3fr;
+  grid-auto-flow: column;
+  gap: 3px;
+  width: 350px;
+}
+
+.pasillo .filaHuecos{
+  display: grid;
+  gap: 3px;
+}
+
+.pasillo .filaHuecos > *,
+.pasillo .nombrePasillo{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pasillo .filaHuecos .hueco{
+  transition: .2s ease;
+  background-color: var(--c1);
+  cursor: pointer;
+  position: relative;
+}
+
+.hueco.ocupado{
+  background-color: var(--c2) !important;
+}
+.hueco.ocupado:hover{
+  background-color: var(--c2O) !important;
+}
+
+.pasillo .filaHuecos .hueco:hover{
+  transition: .2s ease;
+  background-color: var(--c1O)
+}
+
+.pasillo .nombrePasillo{
+  background-color: gray;
+}
+
+.bgHueco{
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0; 
+  right: 0;
+  background-color: rgba(0,0,0,.6);
+  transition: .2s ease;
+
+  opacity: 0;
+}
+
+.opcionOculta {
+  position: absolute;
+  opacity: 0;
+  transition: .2s ease;
+
+  z-index: 999;
+}
+
+.opcionOculta i{
+  font-size: 1.4em;
+  margin-bottom: 5px;
+}
+
+.opcionOculta h4{
+  font-size: .7em;
+}
+
+.hueco:hover .bgHueco,
+.hueco:hover .opcionOculta{
+  opacity: 1;
+  transition: .2s ease;
+}
+
+
+/* ! CREAR ESTANTERIA */
+
+main.crearEstanteria {
+  display: flex;
+  height: 88%
+}
+
+#estanteriaContainer{
+  width: 30%;
+  padding: 30px;
+
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#estanteriaContainer .estanteria{
+  margin-top: 10px;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,.5);
+
+  display: flex; 
+  flex-direction: column;
+  justify-content: space-around;
+
+  border: 9px solid var(--c1);
+
+}
+
+.estanteria .leja{
+  border-top: 3px solid var(--c1);
+  border-bottom: 3px solid var(--c1);
+  height: 100%;
+}
+
+section#datosEstanteriaContainer {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  justify-content: center;
+}
+
+#datosEstanteriaContainer h1{
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+#datosEstanteriaContainer .datosPasillo{
+  display: flex;
+  margin-bottom: 30px;
+  padding: 10px 20px;
+  background-color: var(--c2);
+  border-radius: 7px;
+}
+
+#datosEstanteriaContainer .datosPasillo > *{
+  font-size: 1.6em;
+  margin: 0 30px;
+}
+
+#datosEstanteriaContainer form{
+  width: 70%;
+  display: flex,
+  flex-direction: column;
+  margin-bottom: 20px;
+
+}
+
+#datosEstanteriaContainer form .greatFormGroup{
+  display: flex;
+}
+
+#datosEstanteriaContainer form .greatFormGroup .formGroup{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formGroup .errorMsg{
+  color: var(--cError);
+  display: none;
+}
+.formGroup.error .errorMsg{
+  display: block;
+}
+.formGroup.error input{
+  border-color: var(--cError) !important;
+}
+
+#datosEstanteriaContainer form * label{
+  margin-bottom: 5px;
+  font-size: 1.5em;
+}
+
+#datosEstanteriaContainer form * input{
+  width: 80%;
+  padding: 5px 10px;
+  background-color: rgba(0,0,0,.5);
+  border: 3px solid var(--c1);
+  border-radius: 7px;
+  margin-bottom: 5px;
+  color: white;
+  position: relative;
+}
+#codigo::after  {
+  content: "ES";
+  position: absolute;
+  color: white;
+  top: 0;
+  left: 0;
+}
+#datosEstanteriaContainer .buttonContainer{
+  margin-top: 10px;
+}
+
+#datosEstanteriaContainer .buttonContainer *{
+  margin: 0 10px;
 }
