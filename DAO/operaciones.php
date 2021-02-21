@@ -101,4 +101,16 @@ class Operaciones{
       return false;
     }
   }
+
+  function checkCodigoEstanteria($codigo){
+    global $conexion;
+    $sqlQuery = "SELECT id FROM estanteria WHERE codigo='$codigo'";
+    $resul = $conexion->query($sqlQuery);
+
+    if($resul->num_rows > 0){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }

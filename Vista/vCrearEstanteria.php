@@ -31,13 +31,8 @@ foreach($pasillos as $p){
   <?php include_once 'Estaticos/header.php'; ?>
   <main class="crearEstanteria">
     <section id="estanteriaContainer">
-      <h2 id="h2Codigo">ES003</h2>
-      <div class="estanteria">
-        <div class="leja"></div>
-        <div class="leja"></div>
-        <div class="leja"></div>
-        <div class="leja"></div>
-        <div class="leja"></div>
+      <h2 id="h2Codigo">Código</h2>
+      <div id = "estanteria" class="estanteria">
       </div>
     </section>
     <section id="datosEstanteriaContainer">
@@ -56,7 +51,7 @@ foreach($pasillos as $p){
           </div>
           <div class="formGroup">
             <label for="numLejas">Número de lejas</label>
-            <input type="number" id="numLejas" onchange="cambiaLejasEstanteria(this)" placeholder="Máx. 15 lejas">
+            <input type="number" id="numLejas" onchange="cambiaLejasEstanteria(this)" placeholder="Máx. 15 lejas" value="1">
             <p class="errorMsg">Este campo no es válido</p>
           </div>
         </div>
@@ -64,12 +59,12 @@ foreach($pasillos as $p){
         <div class="greatFormGroup">
           <div class="formGroup">
             <label for="material">Material</label>
-            <input type="text" id="material" placeholder="Ej: Acero">
+            <input type="text" id="material" placeholder="Ej: Acero" onchange="checkMaterialInput()">
             <p class="errorMsg">Este campo no es válido</p>
           </div>
           <div class="formGroup">
             <label for="fechaAlta">Fecha de Alta</label>
-            <input type="date" id="fechaAlta">
+            <input type="date" id="fechaAlta" onchange="checkFechaAltaInput()">
             <p class="errorMsg">Este campo no es válido</p>
           </div>
         </div>

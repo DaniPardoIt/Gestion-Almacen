@@ -116,19 +116,23 @@ function showErrorMsg(element, msg){
   pError.appendChild(document.createTextNode(msg))
 }
 
+let codigoEstanteriaOk = false;
 function cambiaCodigoEstanteria(inputCodigo){
   inputCodigo.parentElement.classList.remove('error')
   let codigo = inputCodigo.value;
   if(codigo.substring(0,2) != "ES"){
+    codigoEstanteriaOk = false;
     showErrorMsg(inputCodigo.parentElement, "El código de estantería debe empezar por ES");
     return false;
   }
   if(codigo.length != 5){
+    codigoEstanteriaOk = false;
     showErrorMsg(inputCodigo.parentElement, "Ejemplo de código: ES001");
     return false;
   }
   for(let i=2; i<5; i++){
     if(isNaN(codigo.substring(i, i+1))){
+      codigoEstanteriaOk = false;
       showErrorMsg(inputCodigo.parentElement, "Los últimos 3 caracteres deben ser números. Ej: ES001")
       return false;
     }
@@ -144,17 +148,83 @@ function cambiaCodigoEstanteria(inputCodigo){
     return response.json()
   })
   .then( res => {
-    if(!res){
-      console.log(res)
+    if(res){
       showErrorMsg(inputCodigo.parentElement, "Este código ya está en uso")
-      return false;
+      codigoEstanteriaOk = false;
+    }else{
+      let h2Codigo = document.getElementById('h2Codigo')
+      removeChilds(h2Codigo)
+      h2Codigo.appendChild(document.createTextNode(codigo))
+
+      codigoEstanteriaOk = true;
     }
   })
 }
 
 
-function cambiaLejaEstanteria(inputLejas){
+function cambiaLejasEstanteria(inputLejas){
+  inputLejas.parentElement.classList.remove('error')
+  let numLejas = inputLejas.value;
+  if(numLejas < 1 || numLejas >15){
+    console.log("Valor erróneo")
+    showErrorMsg(inputLejas.parentElement, "Número de lejas erróneo. 1 a 15 lejas");
+    return false;
+  }
 
+  let estanteriaDiv = document.getElementById("estanteria");
+  removeChilds(estanteriaDiv)
+
+  let leja;
+  for(let i=0; i<numLejas; i++){
+    leja = document.createElement('div')
+    leja.className = "leja"
+    estanteriaDiv.appendChild(leja)
+  }
+
+  return true;
 }
 
+function checkMaterialInput(){
+  let input = document.getElementById('material');
+  input.parentElement.classList.remove('error')
+  console.log("checkMaterial()")
+  console.log(input)
+  if(input.value != null && input.value != ""){
+    return true;
+  }else{
+    showErrorMsg(input.parentElement, "Este campo no puede estar vacío")
+    return false;
+  }
+}
+
+function checkFechaAltaInput(){
+  let input = document.getElementById('fechaAlta')
+  input.parentElement.classList.remove('error')
+  console.log("checkFechaAlta()")
+  console.log(input)
+  if(input.value != null && input.value !=""){
+    return true;
+  }else{
+    showErrorMsg(input.parentElement, "Este campo no puede estar vacío")
+    return false;
+  }
+}
+
+function checkFormCrearEstanteria(){
+  if(!codigoEstanteriaOk){
+    cambiaCodigoEstanteria(document.getElementById('codigo'))
+    return false;
+  }
+  if(
+    codigoEstanteriaOk &&
+    cambiaLejasEstanteria(document.getElementById("numLejas")) &&
+    checkMaterialInput() &&
+    checkFechaAltaInput()
+  ){
+    window.location.href = "../Controlador/cCrearEstanteria.php";
+  }else{
+    console.log('F')
+    return false;
+  }
+}
 
