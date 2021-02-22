@@ -113,4 +113,78 @@ class Operaciones{
       return false;
     }
   }
+
+  function crearEstanteria($codigo, $numLejas, $material, $fechaAlta, $idPasillo, $hueco){
+    /* global $conexion;
+
+    try{
+      $conexion->autocommit(false); 
+      $stmt = $conexion->prepare("INSERT INTO estanteria (id, codigo, lejas, lejasLibres, material, fecha_alta) VALUES (null,?,?,?,?,?)");
+      if ($stmt === false) {
+        throw new AppException("No se ha podido insertar la estantería", 0010);
+      }
+      $stmt->bind_param("siiss", $bCod, $bLejas, $bLejasLibres, $bMat, $bFechaAlta);
+      $bCod = $codigo;
+      $bLejas = $numLejas;
+      $bLejasLibres = $numLejas;
+      $bMat = $material;
+      $bFechaAlta = $fechaAlta;
+      $stmt->execute();
+      if ($stmt === false) {
+        throw new AppException("No se ha podido insertar la estantería", 0011);
+      }
+
+      if($stmt->affected_rows<1){
+        throw new AppException("No se ha podido insertar la estantería", 0012);
+      }
+
+      $sql = "INSERT INTO estanteria_pasillo (id, idEstanteria, idPasillo, hueco)VALUES (null, (SELECT id FROM estanteria WHERE codigo='$codigo'), $idPasillo, $hueco)";
+      $resultado=$conexion->query($sql);
+      if ($conexion-> affected_rows<1){
+        throw new AppException("No se ha podido insertar la estantería en pasillo", 0013);
+      }
+
+      $conexion->commit();
+      $conexion->close(); 
+    }catch(AppException $e){
+      $conexion->rollback();
+      $conexion->close(); 
+      throw $e;
+    } */
+
+
+    global $conexion;
+
+    try{
+      $stmt = $conexion->prepare("INSERT INTO estanteria (id, codigo, lejas, lejasLibres, material, fecha_alta) VALUES (null,?,?,?,?,?)");
+      if ($stmt === false) {
+        throw new AppException("No se ha podido insertar la estantería", 0010);
+      }
+      $stmt->bind_param("siiss", $bCod, $bLejas, $bLejasLibres, $bMat, $bFechaAlta);
+      $bCod = $codigo;
+      $bLejas = $numLejas;
+      $bLejasLibres = $numLejas;
+      $bMat = $material;
+      $bFechaAlta = $fechaAlta;
+      $stmt->execute();
+      if ($stmt === false) {
+        throw new AppException("No se ha podido insertar la estantería", 0011);
+      }
+
+      if($stmt->affected_rows<1){
+        throw new AppException("No se ha podido insertar la estantería", 0012);
+      }
+
+      $sql = "INSERT INTO estanteria_pasillo (id, idEstanteria, idPasillo, hueco)VALUES (null, (SELECT id FROM estanteria WHERE codigo='$codigo'), $idPasillo, $hueco)";
+      $resultado=$conexion->query($sql);
+      if ($conexion-> affected_rows<1){
+        throw new AppException("No se ha podido insertar la estantería en pasillo", 0013);
+      }
+
+      $conexion->close(); 
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+  }
 }

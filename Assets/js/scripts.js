@@ -221,9 +221,24 @@ function checkFormCrearEstanteria(){
     checkMaterialInput() &&
     checkFechaAltaInput()
   ){
-    window.location.href = "../Controlador/cCrearEstanteria.php";
+    let codigo = document.getElementById('codigo').value
+    let numLejas = document.getElementById('numLejas').value
+    let material = document.getElementById('material').value
+    let fechaAlta = document.getElementById('fechaAlta').value
+    let idPasillo = document.getElementById('idPasillo').childNodes[0].textContent
+    let hueco = document.getElementById('hueco').childNodes[0].textContent
+    let obj = {
+      codigo: codigo,
+      numLejas: numLejas,
+      material: material,
+      fechaAlta: fechaAlta,
+      idPasillo: idPasillo,
+      hueco: hueco
+    }
+    obj = JSON.stringify(obj)
+
+    window.location.href = `../Controlador/cCrearEstanteria.php?obj=${obj}`;
   }else{
-    console.log('F')
     return false;
   }
 }
