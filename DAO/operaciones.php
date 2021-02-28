@@ -115,7 +115,7 @@ class Operaciones{
   }
 
   function crearEstanteria($codigo, $numLejas, $material, $fechaAlta, $idPasillo, $hueco){
-    /* global $conexion;
+    global $conexion;
 
     try{
       $conexion->autocommit(false); 
@@ -138,7 +138,9 @@ class Operaciones{
         throw new AppException("No se ha podido insertar la estantería", 0012);
       }
 
-      $sql = "INSERT INTO estanteria_pasillo (id, idEstanteria, idPasillo, hueco)VALUES (null, (SELECT id FROM estanteria WHERE codigo='$codigo'), $idPasillo, $hueco)";
+      $ultimo_id = $conexion->insert_id;
+
+      $sql = "INSERT INTO estanteria_pasillo (id, idEstanteria, idPasillo, hueco)VALUES (null, $ultimo_id, $idPasillo, $hueco)";
       $resultado=$conexion->query($sql);
       if ($conexion-> affected_rows<1){
         throw new AppException("No se ha podido insertar la estantería en pasillo", 0013);
@@ -150,41 +152,192 @@ class Operaciones{
       $conexion->rollback();
       $conexion->close(); 
       throw $e;
-    } */
+    }
+  }
 
-
+  function verEstanteria($idPasillo, $hueco){
     global $conexion;
-
     try{
-      $stmt = $conexion->prepare("INSERT INTO estanteria (id, codigo, lejas, lejasLibres, material, fecha_alta) VALUES (null,?,?,?,?,?)");
-      if ($stmt === false) {
-        throw new AppException("No se ha podido insertar la estantería", 0010);
-      }
-      $stmt->bind_param("siiss", $bCod, $bLejas, $bLejasLibres, $bMat, $bFechaAlta);
-      $bCod = $codigo;
-      $bLejas = $numLejas;
-      $bLejasLibres = $numLejas;
-      $bMat = $material;
-      $bFechaAlta = $fechaAlta;
-      $stmt->execute();
-      if ($stmt === false) {
-        throw new AppException("No se ha podido insertar la estantería", 0011);
+      $sql = "SELECT * FROM estanteria WHERE id=(SELECT idEstanteria FROM estanteria_pasillo WHERE idPasillo='$idPasillo' AND hueco='$hueco')";
+      $resul=$conexion->query($sql);
+
+      if($resul->num_rows > 0){
+        $row = $resul->fetch_assoc();
+        $id = $row['id'];
+        $codigo = $row['codigo'];
+        $lejas = $row['lejas'];
+        $material = $row['material'];
+        $lejasLibres = $row['lejasLibres'];
+
+        $estanteria = new Estanteria($id, $codigo, $lejas, $material, $lejasLibres);
+
+        $estanteria->setObjetos(Operaciones::getObjetosEstanteria($id, $lejas));
+        $conexion->close(); 
+        return $estanteria;
+      }else{
+        throw new AppException("No se ha podido encontrar la estantería", 0015);
       }
 
-      if($stmt->affected_rows<1){
-        throw new AppException("No se ha podido insertar la estantería", 0012);
-      }
-
-      $sql = "INSERT INTO estanteria_pasillo (id, idEstanteria, idPasillo, hueco)VALUES (null, (SELECT id FROM estanteria WHERE codigo='$codigo'), $idPasillo, $hueco)";
-      $resultado=$conexion->query($sql);
-      if ($conexion-> affected_rows<1){
-        throw new AppException("No se ha podido insertar la estantería en pasillo", 0013);
-      }
-
-      $conexion->close(); 
     }catch(AppException $e){
       $conexion->close(); 
       throw $e;
+    }
+  }
+
+  function getObjetosEstanteria($idEstanteria, $lejas){
+    global $conexion;
+    try{
+      $arrayObjetos = array();
+      $arrayIdObjetos = array();
+      for($i=0; $i<$lejas; $i++){
+        $arrayObjetos[$i] = null;
+        $arrayIdObjetos[$i] = null;
+      }
+
+      $sql = "SELECT * FROM caja_estanteria WHERE idEstanteria=$idEstanteria";
+      $resul=$conexion->query($sql);
+
+      if($resul->num_rows > 0){
+        while($row = $resul->fetch_assoc()){
+          $idCaja = $row['idCaja'];
+          $leja = $row['leja'];
+
+          $arrayIdObjetos[$leja-1] = $idCaja;
+        }
+      }else{
+        return $arrayObjetos;
+      }
+
+      for($i=0; $i<count($arrayIdObjetos); $i++){
+        if($arrayIdObjetos[$i] != null){
+          $sql = "SELECT * FROM caja WHERE id=$arrayIdObjetos[$i]";
+          $resul=$conexion->query($sql);
+          $row = $resul->fetch_assoc();
+          $id = $arrayIdObjetos[$i];
+          $codigo = $row['codigo'];
+          $alto = $row['alto'];
+          $ancho = $row['ancho'];
+          $largo = $row['largo'];
+          $color = $row['color'];
+          $material = $row['material'];
+          $contenido = $row['contenido'];
+
+          $caja = new Caja($codigo, $alto, $ancho, $largo, $color, $material, $contenido);
+          $caja->setId($id);
+
+          $arrayObjetos[$i] = $caja;
+        }
+      }
+      $conexion->close(); 
+      return $arrayObjetos;
+
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+  }
+
+  function checkCodigoCaja($codigo){
+    global $conexion;
+    $sqlQuery = "SELECT id FROM caja WHERE codigo='$codigo'";
+    $resul = $conexion->query($sqlQuery);
+
+    if($resul->num_rows > 0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  function crearCaja($objCaja){
+    global $conexion;
+
+    $codigo = $objCaja->codigo;
+    $alto = $objCaja->alto;
+    $ancho = $objCaja->ancho;
+    $largo = $objCaja->largo;
+    $color = $objCaja->color;
+    $material = $objCaja->material;
+    $contenido = $objCaja->contenido;
+    $idEstanteria = $objCaja->idEstanteria;
+    $huecoEstanteria = $objCaja->huecoEstanteria;
+
+    try{
+      $conexion->autocommit(false); 
+      $stmt = $conexion->prepare("INSERT INTO caja (id, codigo, alto, ancho, largo, color, material, contenido) VALUES (null,?,?,?,?,?,?,?)");
+      if ($stmt === false) {
+        throw new AppException("No se ha podido insertar la caja", 0020);
+      }
+      $stmt->bind_param("siiisss", $bCod, $bAlto, $bAncho, $bLargo, $bColor, $bMat, $bCont);
+      $bCod = $codigo;
+      $bAlto = $alto;
+      $bAncho = $ancho;
+      $bLargo = $largo;
+      $bColor = $color;
+      $bMat = $material;
+      $bCont = $contenido;
+      $stmt->execute();
+      if ($stmt === false) {
+        throw new AppException("No se ha podido insertar la caja", 0021);
+      }
+
+      if($stmt->affected_rows<1){
+        throw new AppException("No se ha podido insertar la caja", 0022);
+      }
+
+      $ultimo_id = $conexion->insert_id;
+
+      $sql = "INSERT INTO caja_estanteria (id, idCaja, idEstanteria, leja) VALUES (null, $ultimo_id, $idEstanteria, $huecoEstanteria)";
+      $resultado=$conexion->query($sql);
+      if ($conexion-> affected_rows<1){
+        throw new AppException("No se ha podido insertar la caja en la estantería", 0023);
+      }
+
+      $conexion->commit();
+      $conexion->close(); 
+    }catch(AppException $e){
+      $conexion->rollback();
+      $conexion->close(); 
+      throw $e;
+    }
+  }
+
+  function getCaja($idCaja){
+    global $conexion;
+    try{
+      $sql = "SELECT * FROM caja where id='$idCaja'";
+      $resul=$conexion->query($sql);
+
+      if($resul->num_rows > 0){
+        $row = $resul->fetch_assoc();
+        $id = intval($row['id']);
+        $codigo = $row['codigo'];
+        $alto = doubleval($row['alto']);
+        $ancho = doubleval($row['ancho']);
+        $largo = doubleval($row['largo']);
+        $color = $row['color'];
+        $material = $row['material'];
+        $contenido = $row['contenido'];
+
+        $caja = new Caja($codigo, $alto, $ancho, $largo, $color, $material, $contenido);
+        $caja->setId($id);
+
+        $conexion->close(); 
+        return $caja;
+      }else{
+        throw new AppException("No se ha encontrado ninguna caja", 0024);
+      }
+
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+  }
+
+  function verInventario(){
+    $pasillos = Operaciones::getPasillos();
+    foreach($pasillos as $p){
+      
     }
   }
 }
