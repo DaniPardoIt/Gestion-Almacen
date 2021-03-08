@@ -4,10 +4,10 @@ include_once '../Modelo/Pasillo.php';
 session_start();
 
 $idPasillo = intval($_REQUEST['idPasillo']);
-$hueco = intval($_REQUEST['hueco']);
+$huecoPasillo = intval($_REQUEST['huecoPasillo']);
 
 $_SESSION['idPasillo'] = $idPasillo;
-$_SESSION['hueco'] = $hueco;
+$_SESSION['huecoPasillo'] = $huecoPasillo;
 $pasillos = $_SESSION['pasillos'];
 
 foreach($pasillos as $p){
@@ -39,7 +39,7 @@ foreach($pasillos as $p){
       <h1>CREAR UNA ESTANTERÍA</h1>
       <article class="datosPasillo">
         <h3>Pasillo: <span id="idPasillo"><?= $pasillo->getId()?></span></h3>
-        <h3>Hueco: <span id="hueco"><?= $hueco?></span></h3>
+        <h3>Hueco: <span id="huecoPasillo"><?= $huecoPasillo?></span></h3>
       </article>
       <form action="../Controlador/cCrearEstanteria.php">
         <div class="greatFormGroup">

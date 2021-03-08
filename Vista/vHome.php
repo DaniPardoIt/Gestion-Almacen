@@ -10,6 +10,9 @@
   $usuario = $_SESSION['usuario'];
   $pasillos = $_SESSION['pasillos'];
 
+  // $error = $_REQUEST['error'];
+  // $msg = $_REQUEST['msg'];
+
 ?>
 
 <html>
@@ -108,6 +111,19 @@
       </section>
     </main>
     <?php include_once 'Estaticos/scripts.php' ?>
+    <script>
+      <?php
+        if($msg != ""){
+        ?>
+        buildSucceedModal('Ok', <?=$msg ?>)
+        <?php
+        }else if($error != ""){
+          ?>
+          buildErrorModal('Oops', <?=$error ?>)
+          <?php
+        }
+      ?>
+    </script>
   </body>
 
 </html>

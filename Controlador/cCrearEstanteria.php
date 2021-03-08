@@ -4,7 +4,6 @@ header('Content-Type: application/json; charset=utf-8');
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 include_once "../DAO/operaciones.php";
-include_once "../Modelo/Estanteria.php";
 
 $obj = $_REQUEST['obj'];
 $obj = json_decode($obj);
@@ -13,7 +12,7 @@ $numLejas = $obj->numLejas;
 $material = $obj->material;
 $fechaAlta = $obj->fechaAlta;
 $idPasillo = $obj->idPasillo;
-$hueco = $obj->hueco;
+$hueco = $obj->huecoPasillo;
 
 
 try{

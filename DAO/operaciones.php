@@ -145,6 +145,11 @@ class Operaciones{
       if ($conexion-> affected_rows<1){
         throw new AppException("No se ha podido insertar la estantería en pasillo", 0013);
       }
+      
+      $sql = "UPDATE pasillo SET huecosLibres=(huecosLibres-1) WHERE id='$idPasillo'";$resultado=$conexion->query($sql);
+      if ($conexion-> affected_rows<1){
+        throw new AppException("No se ha podido actualizar huecosLibres de Pasillo", 0014);
+      }
 
       $conexion->commit();
       $conexion->close(); 
@@ -259,16 +264,17 @@ class Operaciones{
     $color = $objCaja->color;
     $material = $objCaja->material;
     $contenido = $objCaja->contenido;
+    $fechaAlta = $objCaja->fechaAlta;
     $idEstanteria = $objCaja->idEstanteria;
     $huecoEstanteria = $objCaja->huecoEstanteria;
 
     try{
       $conexion->autocommit(false); 
-      $stmt = $conexion->prepare("INSERT INTO caja (id, codigo, alto, ancho, largo, color, material, contenido) VALUES (null,?,?,?,?,?,?,?)");
+      $stmt = $conexion->prepare("INSERT INTO caja (id, codigo, alto, ancho, largo, color, material, contenido, fechaAlta) VALUES (null,?,?,?,?,?,?,?,?)");
       if ($stmt === false) {
         throw new AppException("No se ha podido insertar la caja", 0020);
       }
-      $stmt->bind_param("siiisss", $bCod, $bAlto, $bAncho, $bLargo, $bColor, $bMat, $bCont);
+      $stmt->bind_param("siiissss", $bCod, $bAlto, $bAncho, $bLargo, $bColor, $bMat, $bCont, $bFechAlta);
       $bCod = $codigo;
       $bAlto = $alto;
       $bAncho = $ancho;
@@ -276,6 +282,7 @@ class Operaciones{
       $bColor = $color;
       $bMat = $material;
       $bCont = $contenido;
+      $bFechAlta = $fechaAlta;
       $stmt->execute();
       if ($stmt === false) {
         throw new AppException("No se ha podido insertar la caja", 0021);
@@ -291,6 +298,11 @@ class Operaciones{
       $resultado=$conexion->query($sql);
       if ($conexion-> affected_rows<1){
         throw new AppException("No se ha podido insertar la caja en la estantería", 0023);
+      }
+
+      $sql = "UPDATE estanteria SET lejasLibres=(lejasLibres-1) WHERE id='$idEstanteria'";$resultado=$conexion->query($sql);
+      if ($conexion-> affected_rows<1){
+        throw new AppException("No se ha podido actualizar lejasLibres de la estanteria", 0024);
       }
 
       $conexion->commit();
@@ -325,7 +337,46 @@ class Operaciones{
         $conexion->close(); 
         return $caja;
       }else{
-        throw new AppException("No se ha encontrado ninguna caja", 0024);
+        throw new AppException("No se ha encontrado ninguna caja", 0025);
+      }
+
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+  }
+
+  function getCajaPorCodigo($codigo){
+    global $conexion;
+    try{
+      $sql = "SELECT * FROM caja where codigo='$codigo'";
+      $resul=$conexion->query($sql);
+
+      if($resul->num_rows > 0){
+        $row = $resul->fetch_assoc();
+        $id = intval($row['id']);
+        $codigo = $row['codigo'];
+        $alto = doubleval($row['alto']);
+        $ancho = doubleval($row['ancho']);
+        $largo = doubleval($row['largo']);
+        $color = $row['color'];
+        $material = $row['material'];
+        $contenido = $row['contenido'];
+
+        /* UTILIZO UNA stdClass para poder pasar los datos a cliente, ya que si lo hacemos con un modelo, los atributos no son visibles por cliente ya que sus atributos son private */
+        $caja = new stdClass();
+        $caja->id = $id;
+        $caja->codigo = $codigo;
+        $caja->alto = $alto;
+        $caja->ancho = $ancho;
+        $caja->largo = $largo;
+        $caja->color = $color;
+        $caja->material = $material;
+        $caja->contenido = $contenido;
+        $conexion->close(); 
+        return $caja;
+      }else{
+        return false;
       }
 
     }catch(AppException $e){
@@ -335,9 +386,192 @@ class Operaciones{
   }
 
   function verInventario(){
-    $pasillos = Operaciones::getPasillos();
-    foreach($pasillos as $p){
-      
+    $inventario = Operaciones::getPasillos();
+    $estanterias = Operaciones::getEstanteriasCompletas();
+    $estanterias_pasillos = Operaciones::getEstanteria_Pasillo();
+    
+    foreach($inventario as $pasillo){
+      $ocupacion = array();
+      $idPasillo = $pasillo->getId();
+      for($i=0; $i<count($estanterias_pasillos); $i++){
+        if($idPasillo == $estanterias_pasillos[$i]->idPasillo){
+          foreach($estanterias as $estanteria){
+            if($estanterias_pasillos[$i]->idEstanteria == $estanteria->getId()){
+              $ocupacion[] = $estanteria;
+            }
+          }
+        }
+      }
+      $pasillo->setOcupacion($ocupacion);
+    }
+
+    return $inventario;
+  }
+  
+  function getCajas_Estanterias(){
+    $cajas_estanteria = array();
+    global $conexion;
+    try{
+      $sql = "SELECT * FROM caja_estanteria ORDER BY idEstanteria";
+      $resul=$conexion->query($sql);
+  
+      if($resul->num_rows > 0){
+        while($caja_estanteria = $resul->fetch_object()){
+            $caja_estanteria->id = intval($caja_estanteria->id);
+            $caja_estanteria->idCaja = intval($caja_estanteria->idCaja);
+            $caja_estanteria->idEstanteria = intval($caja_estanteria->idEstanteria);
+            $caja_estanteria->leja = intval($caja_estanteria->leja);
+          $cajas_estanteria[] = $caja_estanteria;
+        }
+        
+      }
+  
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+    return $cajas_estanteria;
+  }
+
+  function getCajas(){
+    global $conexion;
+
+    $cajas = array();
+    try{
+      $sql = "SELECT * FROM caja";
+      $resul=$conexion->query($sql);
+  
+      if($resul->num_rows > 0){
+        while($row = $resul->fetch_assoc()){
+          $id = intval($row['id']);
+          $codigo = $row['codigo'];
+          $alto = doubleval($row['alto']);
+          $ancho = doubleval($row['ancho']);
+          $largo = doubleval($row['largo']);
+          $color = $row['color'];
+          $material = $row['material'];
+          $contenido = $row['contenido'];
+  
+          $caja = new Caja($codigo, $alto, $ancho, $largo, $color, $material, $contenido);
+          $caja->setId($id);
+          $cajas[] = $caja;
+        }
+      }
+  
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+    return $cajas;
+  }
+
+  function getEstanterias(){
+    global $conexion;
+
+    $estanterias = array();
+    try{
+      $sql = "SELECT * FROM estanteria";
+      $resul=$conexion->query($sql);
+  
+      if($resul->num_rows > 0){
+        while($row = $resul->fetch_assoc()){
+          $id = intval($row['id']);
+          $codigo = $row['codigo'];
+          $lejas = intval($row['lejas']);
+          $material = $row['material'];
+          $lejasLibres = intval($row['lejasLibres']);
+  
+          $estanteria = new Estanteria($id, $codigo, $lejas, $material, $lejasLibres);
+          $estanteria->setId($id);
+          $estanterias[] = $estanteria;
+        }
+        
+      }
+  
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+    return $estanterias;
+  }
+
+  function getEstanteriasCompletas(){
+    $estanterias = Operaciones::getEstanterias();
+    $cajas_estanteria = Operaciones::getCajas_Estanterias();
+    $cajas = Operaciones::getCajas();
+    
+    foreach($estanterias as $estanteria){
+      $ocupacion = array();
+      $idEstanteria = $estanteria->getId();
+      for($i=0; $i<count($cajas_estanteria); $i++){
+        if($idEstanteria == $cajas_estanteria[$i]->idEstanteria){
+          foreach($cajas as $caja){
+            if($cajas_estanteria[$i]->idCaja == $caja->getId()){
+              $ocupacion[] = $caja;
+              break;
+            }
+          }
+        }
+      }
+      $estanteria->setObjetos($ocupacion);
+    }
+
+    return $estanterias;
+  }
+
+  function getEstanteria_Pasillo(){
+    
+    $estanterias_pasillos = array();
+    global $conexion;
+    try{
+      $sql = "SELECT * FROM estanteria_pasillo ORDER BY idPasillo";
+      $resul=$conexion->query($sql);
+  
+      if($resul->num_rows > 0){
+        while($estanteria_pasillo = $resul->fetch_object()){
+            $estanteria_pasillo->id = intval($estanteria_pasillo->id);
+            $estanteria_pasillo->idEstanteria = intval($estanteria_pasillo->idEstanteria);
+            $estanteria_pasillo->idPasillo = intval($estanteria_pasillo->idPasillo);
+            $estanteria_pasillo->hueco = intval($estanteria_pasillo->hueco);
+          $estanterias_pasillos[] = $estanteria_pasillo;
+        }
+        
+      }
+  
+    }catch(AppException $e){
+      $conexion->close(); 
+      throw $e;
+    }
+    return $estanterias_pasillos;
+
+  }
+
+  function salidaCaja($codigo){
+    global $conexion;
+
+    try{
+      $conexion->autocommit(false); 
+      $stmt = $conexion->prepare("DELETE FROM caja WHERE codigo=?;");
+      if ($stmt === false) {
+        throw new AppException("No se ha podido borrar la caja", 0101);
+      }
+      $stmt->bind_param("s", $bCod);
+      $bCod = $codigo;
+      $stmt->execute();
+      if ($stmt === false) {
+        throw new AppException("No se ha podido borrar la caja", 0102);
+      }
+
+      if($stmt->affected_rows<1){
+        throw new AppException("No se ha podido borrar la caja", 0102);
+      }
+
+      $conexion->commit();
+      $conexion->close(); 
+    }catch(AppException $e){
+      $conexion->rollback();
+      $conexion->close(); 
+      throw $e;
     }
   }
 }

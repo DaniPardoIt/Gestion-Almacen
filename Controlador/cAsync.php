@@ -13,4 +13,12 @@ switch ($metodo){
   case "checkCodigoEstanteria":
     echo json_encode(operaciones::checkCodigoEstanteria($obj->cod));
     break;
+
+  case "checkCodigoCaja":
+    echo json_encode(operaciones::checkCodigoCaja($obj->cod));
+    break;
+
+  case "checkCodigoCajaSalida":
+    echo json_encode(operaciones::getCajaPorCodigo($obj->cod));
+    break;
 }

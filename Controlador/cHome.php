@@ -4,7 +4,6 @@
 include_once '../DAO/operaciones.php';
 include_once '../Modelo/AppException.php';
 session_start();
-global $conexion;
 
 try{
     $usuario = $_SESSION['usuario'];
@@ -13,7 +12,7 @@ try{
         return;
     }
 
-    $pasillos = operaciones::getPasillos();
+    $pasillos = Operaciones::getPasillos();
 
     $_SESSION['pasillos'] = $pasillos;
 

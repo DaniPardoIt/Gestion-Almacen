@@ -1,9 +1,8 @@
 
 <?php
-session_start();
 include_once '../DAO/operaciones.php';
 include_once '../Modelo/Usuario.php';
-
+session_start();
 try{
     $email = $_REQUEST['email'];
     $password = $_REQUEST['password'];

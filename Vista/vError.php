@@ -13,7 +13,7 @@ $error = $_REQUEST['Error'];
 <body>
   <?php include_once 'Estaticos/header.php'; ?>
   <main>
-
+    <h1><?=$error ?></h1>
   </main>
   <?php include_once 'Estaticos/scripts.php' ?>
 </body>

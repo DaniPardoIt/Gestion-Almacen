@@ -8,14 +8,16 @@ class Caja {
     private $largo;
     private $color;
     private $material;
+    private $contenido;
     
-    public function __construct($codigo, $alto, $ancho, $largo, $color, $material) {
+    public function __construct($codigo, $alto, $ancho, $largo, $color, $material, $contenido) {
         $this->setCodigo($codigo);
         $this->setAlto($alto);
         $this->setAncho($ancho);
         $this->setLargo($largo);
         $this->setColor($color);
         $this->setMaterial($material);
+        $this->setContenido($contenido);
     }
     
     public function calculaVolumen(){
@@ -51,6 +53,10 @@ class Caja {
         return $this->material;
     }
 
+    function getContenido() {
+        return $this->contenido;
+    }
+
     function setId($id) {
         $this->id = $id;
     }
@@ -77,6 +83,10 @@ class Caja {
 
     function setMaterial($material) {
         $this->material = $material;
+    }
+
+    function setContenido($contenido) {
+        $this->contenido = $contenido;
     }
 
 

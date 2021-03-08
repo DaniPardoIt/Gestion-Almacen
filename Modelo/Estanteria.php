@@ -15,7 +15,6 @@ class Estanteria {
         $this->setLejas($lejas);
         $this->setMaterial($material);
         $this->setLejasLibres($lejasLibres);
-        $this->setObjetos(array($lejas));
     }
     
     public function addObjeto($obj){
